@@ -1,0 +1,9 @@
+*.exe
+*.xml
+*.iml
+*.pyc
+*.ui
+*.gz
+*.pdf
+*.txt
+*.dll
