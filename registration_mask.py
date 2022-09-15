@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     path = r'H:\CT2CECT\pix2pix\data\ncct2cect_a'
 
-    for i in trange(len(m_img_list)):
+    for i in trange(39, len(m_img_list)):
         _, fullflname = os.path.split(m_img_list[i])
 
         # Get params and change a few values
