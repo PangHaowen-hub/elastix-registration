@@ -2,8 +2,6 @@ import pyelastix
 import os
 from tqdm import trange
 import SimpleITK as sitk
-import numpy as np
-import shutil
 
 
 def get_listdir(path):
@@ -16,11 +14,11 @@ def get_listdir(path):
 
 
 if __name__ == '__main__':
-    f_img_list = get_listdir(r'H:\PRM\59_cases_nii\59_cases_nii_i_lung_0')
+    f_img_list = get_listdir(r'C:\Users\user\Desktop\temp\i')
     f_img_list.sort()
-    m_img_list = get_listdir(r'H:\PRM\59_cases_nii\59_cases_nii_e_lung_0')
+    m_img_list = get_listdir(r'C:\Users\user\Desktop\temp\e')
     m_img_list.sort()
-    path = r'H:\PRM\59_cases_nii\e2i_0'
+    path = r'C:\Users\user\Desktop\temp\result'
 
     for i in trange(len(f_img_list)):
         _, fullflname = os.path.split(m_img_list[i])
@@ -29,7 +27,7 @@ if __name__ == '__main__':
         params = pyelastix.get_default_params()
         params.MaximumNumberOfIterations = 600
         params.FinalGridSpacingInVoxels = 10
-        params.DefaultPixelValue = 0  # TODO：需要修改
+        params.DefaultPixelValue = 0
         save_path = os.path.join(path, fullflname + '.txt')
         try:
             im1_deformed, field = pyelastix.register(m_img_list[i], f_img_list[i], params, verbose=0,
@@ -40,5 +38,11 @@ if __name__ == '__main__':
             new_img.SetSpacing(sitk_img.GetSpacing())
             new_img.SetOrigin(sitk_img.GetOrigin())
             sitk.WriteImage(new_img, os.path.join(path, fullflname))
+
+            new_img = sitk.GetImageFromArray(field)
+            new_img.SetDirection(sitk_img.GetDirection())
+            new_img.SetSpacing(sitk_img.GetSpacing())
+            new_img.SetOrigin(sitk_img.GetOrigin())
+            sitk.WriteImage(new_img, os.path.join(path, 'field' + fullflname))
         except:
             print(m_img_list[i] + ' 错误！')
